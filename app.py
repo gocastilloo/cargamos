@@ -162,7 +162,6 @@ def transaction_review(origin, end, product_name, quantity):
         a = str(bl)
         if a == 'None':
             return 'no prod'
-
         elif (bl.quantity - 100) > quantity:
             bal = Holder.query.filter_by(shop_name=end, product_name=product_name).first()
             a = str(bal)
