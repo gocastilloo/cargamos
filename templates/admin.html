@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<div class="header">
+    <h2>Admin page</h2>
+    <div class="box">
+        <h3>Shops</h3>
+        <div class="stores">
+            {% for store in shop %}
+            <div class="single">
+                    <p>Name: {{ store.name }}</p>
+                    <p>Direction: {{ store.direction }}</p>
+                    <p>Description: {{ store.description }}</p>
+            </div>
+            {% endfor %}
+        <i class="fas fa-plus-circle"></i>
+        </div>
+    <div class="box"></div>
+        <h3>Products</h3>
+        <div class="products">
+            {% for item in products %}
+            <div class="single">
+                    <p>Name: {{ item.name }}</p>
+                    <p>Description: {{ item.description }}</p>
+                    <p>Price: ${{ item.price }}</p>
+            </div>
+            {% endfor %}
+        <i class="fas fa-plus-circle"></i>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

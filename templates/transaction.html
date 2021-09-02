@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Transactions{% endblock %}
+{% block content %}
+    <h4>
+        Create a new transaction
+    </h4>
+    <form  action="" method="post">
+        {{ form.csrf_token() }}
+        {{ form.product_name.label}}
+        {{ form.product_name}}
+        <br>
+        {{ form.origin.label}}
+        {{ form.origin}}
+        <br>
+        {{ form.end.label}}
+        {{ form.end}}
+        <br>
+        {{ form.product_quantity.label}}
+        {{ form.product_quantity }}
+        <br>
+        {{ form.transaction_submit }}
+    </form>
+
+    <div class="box">
+        <table>
+            <thead>
+             <tr>
+               <th>ID</th>
+               <th>Timestamp</th>
+               <th>From</th>
+               <th>To</th>
+               <th>Product</th>
+               <th>Quantity </th>
+             </tr>
+            <tbody>
+            {%for t in transactions%}
+             <tr>
+               <td>{{t.id}}</td>
+               <td>{{t.modified }}</td>
+               <td>{{t.origin}}</td>
+               <td>{{t.end}}</td>
+               <td>{{t.product_name}}</td>
+               <td>{{t.product_quantity}}</td>
+             </tr>
+             {% endfor %}
+            </tbody>
+            </thead>
+        </table>
+    </div>
+{% endblock %}

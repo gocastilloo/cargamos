@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Store Detail{% endblock %}
+{% block content %}
+    <h2>Store Detail</h2>
+        <form action="" method="POST" id="shop">
+            {{ form.csrf_token() }}
+            {{ form.shop_name.label }}
+            <br>
+            {{ form.shop_name }}
+            <br>
+            {{ form.shop_description.label }}
+            <br>
+            {{ form.shop_description }}
+            <br>
+            {{ form.shop_location.label }}
+            <br>
+            {{ form.shop_location }}
+            <br>
+            {{ form.shop_active.label }}
+            <br>
+            {{ form.shop_active }}
+            <br>
+            {{ form.shop_submit }}
+        </form>
+
+        <div class="stores">
+            {% for store in shop %}
+            <div class="single">
+                    <p>Name: {{ store.name }}</p>
+                    <p>Direction: {{ store.direction }}</p>
+                    <p>Description: {{ store.description }}</p>
+            </div>
+            {% endfor %}
+        <i class="fas fa-plus-circle"></i>
+        </div>
+{% endblock %}

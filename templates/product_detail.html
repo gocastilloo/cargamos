@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Product Detail{% endblock %}
+{% block content %}
+    <h2>Product Detail</h2>
+
+    <form action="" method="POST" id="products">
+        {{ form.csrf_token() }}
+        {{ form.product_name.label }}
+        <br>
+        {{ form.product_name }}
+        <br>
+        {{ form.product_description.label }}
+        <br>
+        {{ form.product_description }}
+        <br>
+        <br>
+        {{ form.product_quantity.label }}
+        <br>
+        {{ form.product_quantity }}
+        <br>
+        {{ form.product_sku.label }}
+        <br>
+        {{ form.product_sku }}
+        <br>
+        {{ form.product_price.label }}
+        <br>
+        {{ form.product_price }}
+        <br>
+        {{ form.product_submit }}
+    </form>
+
+    <div class="products">
+        {% for item in products %}
+        <div class="single">
+                <p>Name: {{ item.name }}</p>
+                <p>Description: {{ item.description }}</p>
+                <p>Price: ${{ item.price }}</p>
+                <p>Quantity: {{ item.quantity }}</p>
+
+        </div>
+        {% endfor %}
+    <i class="fas fa-plus-circle"></i>
+    </div>
+{% endblock %}
