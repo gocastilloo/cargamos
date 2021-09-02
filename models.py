@@ -1,14 +1,14 @@
 """Models for Cargamos® Project"""
-from .app import db
+from app import db
 
 
 class Shop(db.Model):
     __tablename__ = 'shops'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    description = db.Column(db.String(500))
-    direction = db.Column(db.String(250))
+    name = db.Column(db.String())
+    description = db.Column(db.String())
+    direction = db.Column(db.String())
     active = db.Column(db.Boolean(), default=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
     modified_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now(), nullable=False)
@@ -38,9 +38,9 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
-    origin = db.Column(db.String(20), nullable=False)
-    end = db.Column(db.String(20), nullable=False)
-    product_name = db.Column(db.String(20), nullable=False)
+    origin = db.Column(db.String(), nullable=False)
+    end = db.Column(db.String(), nullable=False)
+    product_name = db.Column(db.String(), nullable=False)
     product_quantity = db.Column(db.Integer, nullable=False)
     modified = db.Column(db.DateTime, server_default=db.func.now(), nullable=False)
 
@@ -52,8 +52,8 @@ class Holder(db.Model):
     __tablename__ = 'holder'
 
     id = db.Column(db.Integer, primary_key=True)
-    product_name = db.Column(db.String(20), nullable=False)
-    shop_name = db.Column(db.String(20), nullable=False)
+    product_name = db.Column(db.String(), nullable=False)
+    shop_name = db.Column(db.String(), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):

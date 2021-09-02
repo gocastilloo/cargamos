@@ -3,19 +3,30 @@
 from flask import Flask, render_template, make_response, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 # App imports
-from .forms import NewProduct, NewShop, NewTransaction
+from forms import NewProduct, NewShop, NewTransaction
 # SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 # Utils
 from datetime import datetime
 import pdb
-from . import create_app
+# from . import create_app
+from flask import Flask
+from config import Config
+
+
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    return app
+
 
 app = create_app()
 db = SQLAlchemy()
-from .models import *
+from models import *
 db.init_app(app)
 
+with app.app_context():
+    db.create_all()
 
 @app.route('/home')
 def admin():
@@ -75,10 +86,10 @@ def product():
 @app.route('/transactions', methods=['GET', 'POST'])
 def transactions():
     product_list = []
-    shop_list = []
+    shop_list = ['Warehouse']
     new_transaction = NewTransaction()
     products = Product.query.all()
-    transactions = Transaction.query.all()
+    all_transactions = Transaction.query.all()
     exist = bool(Transaction.query.all())
     if exist is False:
         flash('Add a new transaction', 'danger')
@@ -102,6 +113,8 @@ def transactions():
                                        new_transaction.product_quantity.data)
         if validator == 'Same point':
             flash('Try again, origin and end must be different', 'danger')
+        elif validator == 'No prod':
+            flash('Try again, there is no product', 'danger')
         elif validator is False:
             flash('Try again, quantity must be lower than existed', 'danger')
         else:
@@ -120,17 +133,21 @@ def transactions():
     headers = {'Content-Type': 'text/html'}
     return make_response(render_template(
         'transaction.html',
-        transactions=transactions,
+        transactions=all_transactions,
         form=new_transaction), 200, headers)
 
 
 def transaction_review(origin, end, product_name, quantity):
+    # pdb.set_trace()
+    product_name = product_name.strip("()',")
+    origin = origin.strip("()',")
+    end = end.strip("()',")
     if origin == end:
         return 'Same point'
     elif origin == 'Warehouse' and end != 'Warehouse':
-        product = Product.query.filter_by(product_name=product_name).first()
-        if product.prod_qty >= quantity:
-            product.prod_qty -= quantity
+        product = Product.query.filter_by(name=product_name).first()
+        if product.quantity >= quantity:
+            product.quantity -= quantity
             hold = Holder.query.filter_by(shop_name=origin, product_name=product_name).first()
             a = str(hold)
             if a == 'None':
@@ -147,11 +164,11 @@ def transaction_review(origin, end, product_name, quantity):
         hold = Holder.query.filter_by(shop_name=origin, product_name=product_name).first()
         a = str(hold)
         if a == 'None':
-            return 'no prod'
+            return 'No prod'
         else:
             if hold.quantity >= quantity:
-                prodq = Product.query.filter_by(product_name=product_name).first()
-                prodq.prod_qty = prodq.prod_qty + quantity
+                prodq = Product.query.filter_by(name=product_name).first()
+                prodq.quantity = prodq.quantity + quantity
                 hold.quantity -= quantity
                 db.session.commit()
             else:
@@ -161,7 +178,7 @@ def transaction_review(origin, end, product_name, quantity):
         bl = Holder.query.filter_by(shop_name=origin, product_name=product_name).first()
         a = str(bl)
         if a == 'None':
-            return 'no prod'
+            return 'No prod'
         elif (bl.quantity - 100) > quantity:
             bal = Holder.query.filter_by(shop_name=end, product_name=product_name).first()
             a = str(bal)
